@@ -219,6 +219,7 @@ app.post("/modify", async (req, res)=>{
   const start_date = req.body.start_date;
   const end_date = req.body.end_date;``
   const experience = req.body.experience;
+  // console.log(start_date);
 
   // Selecting the state code of the entered state
   const result = await db.query(
@@ -254,10 +255,18 @@ app.post("/modify", async (req, res)=>{
     
     // If state exists but is already added
     catch(err){      
-      console.log(err);
-      await render_function(req, res, 
-        "The given state is already added. Pls try again."
-      );
+      // console.log(err);
+      if (err.routine ==="DateTimeParseError"){
+        await render_function(req, res,
+          "Date cannot be empty"
+        );
+      }
+      else{
+        await render_function(req, res, 
+          "The given state is already added. Pls try again."
+        );
+      }
+
     } 
   }
 
