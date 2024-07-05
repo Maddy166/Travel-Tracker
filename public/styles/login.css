@@ -1,0 +1,36 @@
+*{
+    box-sizing: border-box;
+    /* border: 2px solid red; */
+}
+body{
+    background: #21252b;
+    font-family: "Roboto", sans-serif;
+}
+  
+.centered {
+
+    padding-top: 260px;
+    text-align: center;
+    height: 500px;
+}
+
+.error-msg{
+    margin-top: 10px;
+}
+
+.heading{
+    color :#21252b;
+}
+
+.container1{
+    color: #21252b;
+    background-color: #fff;
+    width: 400px;
+    height: 500px;
+    margin: auto;
+    margin-top: 200px;
+}
+
+.card-body{
+    padding: 50px;
+}  
