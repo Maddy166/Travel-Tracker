@@ -2,19 +2,32 @@ import express from "express";
 import bodyParser from "body-parser";
 import pg from "pg";
 import bcrypt from "bcrypt";
+import dotenv from "dotenv";
+import { createRequire } from "module";
+
+// To load the environment variables
+const require = createRequire(import.meta.url);
+dotenv.config();
 
 // Initializing the app
 const app = express();
-const port = 3000;
 const saltRounds = 10;
+const port = process.env.PORT || 3000;
+const database_url = process.env.DATABASE_URL;
 
 // Initializing the database
+// const db = new pg.Client({
+  //   user : "postgres",
+  //   host : "localhost",
+  //   database : "Practice",
+  //   password : "Maddy",
+  //   port : 5432
+  // });
+  
+  
+// Initializing the database
 const db = new pg.Client({
-  user : "postgres",
-  host : "localhost",
-  database : "Practice",
-  password : "Maddy",
-  port : 5432
+  connectionString: database_url,
 });
 
 // Connecting to the databse
