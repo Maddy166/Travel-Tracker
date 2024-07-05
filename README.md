@@ -14,7 +14,7 @@ Travel Tracker is a web application built using Node.js/Express and PostgreSQL, 
 - **Backend:** Node.js, Express.js
 - **Database:** PostgreSQL
 - **Frontend Templating:** EJS (Embedded JavaScript)
-- **Deployment:** Render (backend deployment), ElephantSQL (database hosting)
+- **Deployment:** Render
 
 ## Usage
 
