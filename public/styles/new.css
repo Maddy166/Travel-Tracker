@@ -2,13 +2,22 @@
 * {
   box-sizing: border-box;
 }
-body {
+
+body{
+  position: relative;
+  margin: 0;
+  height: 100%;
+}
+
+.container1 {
   position: absolute;
   top: 35%;
   left: 35%;
   transform: translate(-35%, -35%);
   font-family: "Roboto";
   color: #ffffff;
+  height: 100%;
+  margin: 10px;
 }
 input[type="radio"] {
   display: none;
@@ -91,4 +100,12 @@ label span.purple {
 }
 label span.pink {
   background: #e03997;
+}
+
+.credits{
+  position: absolute;
+  color: white;
+  right: 15px;
+  bottom: 0px;
+  margin: 1.4px 0px;
 }

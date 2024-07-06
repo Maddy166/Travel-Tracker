@@ -54,6 +54,13 @@ body {
   z-index: 1000;
 }
 
+.credits{
+  position: absolute;
+  color: white;
+  right: 15px;
+  bottom: 0px;
+}
+
 .state-card{
   z-index: 1000;
   position: absolute;

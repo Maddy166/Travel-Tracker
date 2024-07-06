@@ -34,3 +34,10 @@ body{
 .card-body{
     padding: 50px;
 }  
+
+.credits{
+    position: absolute;
+    color: white;
+    right: 15px;
+    bottom: 0px;
+}
