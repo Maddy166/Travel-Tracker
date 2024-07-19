@@ -4,6 +4,7 @@ import pg from "pg";
 import bcrypt from "bcrypt";
 import dotenv from "dotenv";
 import { createRequire } from "module";
+import { start } from "repl";
 
 // To load the environment variables
 const require = createRequire(import.meta.url);
@@ -23,7 +24,6 @@ const database_url = process.env.DATABASE_URL;
   //   password : "Maddy",
   //   port : 5432
   // });
-  
   
 // Initializing the database
 const db = new pg.Client({
@@ -217,65 +217,70 @@ app.post("/modify", async (req, res)=>{
   const state = req.body.state.toLowerCase();
   const func = req.body.func;
   const start_date = req.body.start_date;
-  const end_date = req.body.end_date;``
+  const end_date = req.body.end_date;
   const experience = req.body.experience;
-  // console.log(start_date);
-
-  // Selecting the state code of the entered state
-  const result = await db.query(
-    "SELECT state_code FROM states WHERE LOWER(state_name) LIKE $1 || '%' ", 
-    [state]
-  );
-
-  // If state exists
-  if (result.rows.length===1){
-    let data = result.rows[0];
-    let state_code = data.state_code;
-
-    try {
-      // Adding a state
-      if (func==="add"){
-        await db.query(
-          "INSERT INTO visited_states(state_code, member_id, user_id, start_date, end_date, experience) VALUES ($1, $2, $3, $4, $5, $6)", 
-          [state_code, current_member_id, curr_user_id, start_date, end_date, experience]
-        );
-      } 
-
-      // Deleting a state
-      else{
-        // console.log("delete");
-
-        await db.query(
-          "DELETE FROM visited_states WHERE state_code = $1 AND member_id = $2 AND user_id = $3", 
-          [state_code, current_member_id, curr_user_id]
-        );
-      }
-      await render_function(req, res);
-    } 
-    
-    // If state exists but is already added
-    catch(err){      
-      // console.log(err);
-      if (err.routine ==="DateTimeParseError"){
-        await render_function(req, res,
-          "Date cannot be empty"
-        );
-      }
-      else{
-        await render_function(req, res, 
-          "The given state is already added. Pls try again."
-        );
-      }
-
-    } 
+  
+  if (end_date < start_date){
+    console.log("Executed");
+    render_function(req, res, "Date is invalid. Try again.");
   }
 
-  // If state does not exists
   else{
-    await render_function(req, res, 
-      "The given state does not exist. Pls try again."
+    // Selecting the state code of the entered state
+    const result = await db.query(
+      "SELECT state_code FROM states WHERE LOWER(state_name) LIKE $1 || '%' ", 
+      [state]
     );
-  }
+
+    // If state exists
+    if (result.rows.length===1){
+      let data = result.rows[0];
+      let state_code = data.state_code;
+
+      try {
+        // Adding a state
+        if (func==="add"){
+          await db.query(
+            "INSERT INTO visited_states(state_code, member_id, user_id, start_date, end_date, experience) VALUES ($1, $2, $3, $4, $5, $6)", 
+            [state_code, current_member_id, curr_user_id, start_date, end_date, experience]
+          );
+        } 
+
+        // Deleting a state
+        else{
+          // console.log("delete");
+
+          await db.query(
+            "DELETE FROM visited_states WHERE state_code = $1 AND member_id = $2 AND user_id = $3", 
+            [state_code, current_member_id, curr_user_id]
+          );
+        }
+        await render_function(req, res);
+      } 
+      
+      // If state exists but is already added
+      catch(err){      
+        // console.log(err);
+        if (err.routine ==="DateTimeParseError"){
+          await render_function(req, res,
+            "Date cannot be empty"
+          );
+        }
+        else{
+          await render_function(req, res, 
+            "The given state is already added. Pls try again."
+          );
+        }
+      } 
+    }
+
+    // If state does not exists
+    else{
+      await render_function(req, res, 
+        "The given state does not exist. Pls try again."
+      );
+    }
+  }  
 });
 
 
@@ -322,6 +327,7 @@ app.post("/member", async (req, res)=>{
   // Setting the current member id based on the member clicked
   else{
     current_member_id = input;
+
     await render_function(req, res);
   }
 });
