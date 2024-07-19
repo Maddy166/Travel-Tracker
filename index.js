@@ -219,9 +219,9 @@ app.post("/modify", async (req, res)=>{
   const start_date = req.body.start_date;
   const end_date = req.body.end_date;
   const experience = req.body.experience;
-  
+
   if (end_date < start_date){
-    console.log("Executed");
+    // console.log("Executed");
     render_function(req, res, "Date is invalid. Try again.");
   }
 
