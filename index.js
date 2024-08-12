@@ -62,43 +62,56 @@ app.post("/register", async (req, res) => {
   const email = req.body.username;
   const password = req.body.password;
 
-  const result = await db.query(
-    "SELECT * FROM users WHERE email = $1", 
-    [email]
-  );
-
-  // Checking if user alreadu exists
-  if (result.rows.length>0){
+  if (email.length == 0){
     res.render(
       "register.ejs", 
-      {error : "User already exists. Try logging in"});
+      {error : "Enter a valid email"});
+  }
+  else if (password.length <= 4){
+    res.render(
+      "register.ejs", 
+      {error : "Password should contain atleast 5 characters"});
   }
 
   else{
-    
-    // Hashing the password before storing in the database
-    const hashed_password = await bcrypt.hash(password, saltRounds);
-    // Inserting a new User
-
-    const user_result = await db.query(
-      "INSERT INTO users(email, password) VALUES ($1, $2) RETURNING *", 
-      [email, hashed_password]
+    const result = await db.query(
+      "SELECT * FROM users WHERE email = $1", 
+      [email]
     );
 
-    // /Setting the current user
-    curr_user_id = user_result.rows[0].id;
+    // Checking if user alreadu exists
+    if (result.rows.length>0){
+      res.render(
+        "register.ejs", 
+        {error : "User already exists. Try logging in"});
+    }
 
-    // Inserting a new Member on registration of a user
-    const member_result = await db.query
-    ("INSERT INTO members(name, color, user_id) VALUES ($1, $2, $3) RETURNING *", 
-      ["Me", "yellow", curr_user_id]
-    );
+    else{
+      // Hashing the password before storing in the database
+      const hashed_password = await bcrypt.hash(password, saltRounds);
+      // Inserting a new User
 
-    // Setting the current member 
-    current_member_id = member_result.rows[0].id;
+      const user_result = await db.query(
+        "INSERT INTO users(email, password) VALUES ($1, $2) RETURNING *", 
+        [email, hashed_password]
+      );
 
-    // Rendering the Main Page
-    await render_function(req, res);
+      // /Setting the current user
+      curr_user_id = user_result.rows[0].id;
+
+      // Inserting a new Member on registration of a user
+      const member_result = await db.query
+      ("INSERT INTO members(name, color, user_id) VALUES ($1, $2, $3) RETURNING *", 
+        ["Me", "yellow", curr_user_id]
+      );
+
+      // Setting the current member 
+      current_member_id = member_result.rows[0].id;
+
+      // Rendering the Main Page
+      await render_function(req, res);
+    }
+
   }
 
 });
